@@ -226,6 +226,3 @@ uv sync
 uv run pytest            # 54 tests, a few seconds
 uv run ruff check . && uv run mypy src
 ```
-
-See [ROADMAP.md](ROADMAP.md) for what is planned and what was corrected
-along the way.
