@@ -1,0 +1,46 @@
+# Publish the prebuilt demo page (site/index.html and site/report.html) to
+# GitHub Pages. No build step: the page is generated locally with
+# `uv run python site/build.py` and committed.
+
+name: pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/index.html"
+      - "site/report.html"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Collect the page files
+        run: |
+          mkdir _site
+          cp site/index.html site/report.html _site/
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

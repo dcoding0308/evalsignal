@@ -51,6 +51,8 @@ margin does not count):
 
 ## Demo page
 
+**Live demo: https://dcoding0308.github.io/evalsignal/** (no installation needed).
+
 [`site/index.html`](site/index.html) walks through four examples (a clear
 improvement, a small test set, a cheaper model with no meaningful change,
 and a regression hidden in one category), a test-size planner, and the real
