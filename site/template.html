@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EvalSignal demo</title>
+<meta name="description" content="Is an AI change a real improvement or just noise? Paired statistics for model evaluations.">
+<style>
+:root {
+  --bg: #f7f8fa; --surface: #ffffff; --surface-2: #f1f3f7; --border: #e2e6ed;
+  --text: #182032; --muted: #5b6678; --accent: #3654d6; --accent-soft: #e8ecfc;
+  --code-bg: #f1f3f7;
+  --improvement: #087443; --improvement-soft: #e3f4ea;
+  --regression: #b42318; --regression-soft: #fde8e6;
+  --nochange: #1e5bc6; --nochange-soft: #e5eefc;
+  --unsure: #a15c07; --unsure-soft: #fdf1df;
+  --margin-band: #d9e5fb; --zero: #6b7588;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f131a; --surface: #171c25; --surface-2: #1f2531; --border: #2b3240;
+    --text: #e6e9ef; --muted: #9aa4b5; --accent: #8ea2ff; --accent-soft: #232b48;
+    --code-bg: #1f2531;
+    --improvement: #4cc38a; --improvement-soft: #16301f;
+    --regression: #ff7a6e; --regression-soft: #3a1b19;
+    --nochange: #7aa7ff; --nochange-soft: #1a2741;
+    --unsure: #f0b155; --unsure-soft: #33260f;
+    --margin-band: #233456; --zero: #8b95a8;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f131a; --surface: #171c25; --surface-2: #1f2531; --border: #2b3240;
+  --text: #e6e9ef; --muted: #9aa4b5; --accent: #8ea2ff; --accent-soft: #232b48;
+  --code-bg: #1f2531;
+  --improvement: #4cc38a; --improvement-soft: #16301f;
+  --regression: #ff7a6e; --regression-soft: #3a1b19;
+  --nochange: #7aa7ff; --nochange-soft: #1a2741;
+  --unsure: #f0b155; --unsure-soft: #33260f;
+  --margin-band: #233456; --zero: #8b95a8;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+a { color: var(--accent); }
+code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13.5px; }
+main { max-width: 980px; margin: 0 auto; padding: 0 16px 64px; }
+header.hero { padding: 56px 0 28px; }
+.eyebrow { color: var(--accent); font-weight: 600; font-size: 14px; letter-spacing: .02em; }
+h1 { font-size: clamp(28px, 5vw, 42px); line-height: 1.15; margin: 8px 0 14px; letter-spacing: -.01em; }
+.lead { font-size: 18px; color: var(--muted); max-width: 720px; margin: 0; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.button {
+  display: inline-block; padding: 9px 16px; border-radius: 8px; font-weight: 600; font-size: 15px;
+  text-decoration: none; border: 1px solid var(--border); background: var(--surface); color: var(--text);
+}
+.button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+:root[data-theme="dark"] .button.primary { color: #0f131a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .button.primary { color: #0f131a; } }
+.notice {
+  margin-top: 26px; padding: 12px 14px; border-radius: 8px; background: var(--surface-2);
+  border: 1px solid var(--border); color: var(--muted); font-size: 14px;
+}
+.notice strong { color: var(--text); }
+section { margin-top: 56px; }
+.step { color: var(--accent); font-weight: 700; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+h2 { font-size: 26px; margin: 4px 0 8px; letter-spacing: -.01em; }
+.intro { color: var(--muted); max-width: 760px; margin: 0 0 20px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.tab {
+  font: inherit; font-size: 15px; font-weight: 600; padding: 8px 14px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--border); background: var(--surface); color: var(--muted);
+}
+.tab[aria-selected="true"] { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+.tab:focus-visible, .chip:focus-visible, .button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.story { margin: 0 0 16px; color: var(--muted); }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.stat { background: var(--surface-2); border-radius: 8px; padding: 10px 12px; }
+.stat .k { font-size: 13px; color: var(--muted); }
+.stat .v { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.verdict { margin-top: 18px; border-radius: 10px; padding: 14px 16px; border: 1px solid transparent; }
+.verdict .badge { display: inline-block; font-size: 12.5px; font-weight: 700; letter-spacing: .04em; border-radius: 6px; padding: 3px 8px; color: #fff; }
+.verdict .headline { font-weight: 650; font-size: 17px; margin: 8px 0 4px; }
+.verdict p { margin: 4px 0; font-size: 15px; }
+.o-improvement { --c: var(--improvement); --cs: var(--improvement-soft); }
+.o-regression { --c: var(--regression); --cs: var(--regression-soft); }
+.o-no_meaningful_change { --c: var(--nochange); --cs: var(--nochange-soft); }
+.o-not_enough_evidence { --c: var(--unsure); --cs: var(--unsure-soft); }
+.verdict { background: var(--cs); border-color: var(--c); }
+.verdict .badge { background: var(--c); }
+:root[data-theme="dark"] .verdict .badge { color: #0f131a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .verdict .badge { color: #0f131a; } }
+.chart { margin: 20px 0 4px; }
+.chart .label { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+.bar { position: relative; height: 30px; background: var(--surface-2); border-radius: 6px; }
+.bar .band { position: absolute; top: 0; bottom: 0; background: var(--margin-band); }
+.bar .zero { position: absolute; top: 0; bottom: 0; width: 1px; left: 50%; background: var(--zero); }
+.bar .ci { position: absolute; top: 11px; height: 8px; border-radius: 4px; background: var(--c, var(--accent)); }
+.bar .dot { position: absolute; top: 8px; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; background: var(--c, var(--accent)); border: 2px solid var(--surface); }
+.scale { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-top: 3px; font-variant-numeric: tabular-nums; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--muted); margin-top: 6px; }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 5px; }
+.command { margin-top: 16px; }
+.command .label { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+pre { margin: 0; background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; overflow-x: auto; white-space: pre; }
+.slices { margin-top: 18px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; }
+.card, .slice > *, .two > *, .planner > *, .links > * { min-width: 0; }
+.slice { display: grid; grid-template-columns: 120px 120px 90px minmax(0, 1fr) 76px; gap: 12px; align-items: center; padding: 8px 10px; border-radius: 8px; font-variant-numeric: tabular-nums; }
+.slice.head { font-size: 13px; color: var(--muted); padding-top: 0; padding-bottom: 0; }
+.slice.flag { background: var(--regression-soft); --c: var(--regression); }
+.slice .name { font-weight: 600; }
+.slice .num { text-align: right; }
+.slice .bar { height: 22px; }
+.slice .bar .ci { top: 8px; height: 6px; }
+.slice .bar .dot { top: 5px; width: 12px; height: 12px; margin-left: -6px; }
+.slice:not(.flag) { --c: var(--zero); }
+.overall-line { margin: 0; font-size: 15px; }
+.pill { display: inline-block; border-radius: 999px; padding: 1px 9px; font-size: 13px; font-weight: 600; background: var(--regression); color: #fff; }
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.two h3 { margin: 10px 0 6px; font-size: 18px; }
+.two p { margin: 6px 0; font-size: 15px; color: var(--muted); }
+.planner { margin-top: 16px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.planner h3 { margin: 0 0 4px; font-size: 18px; }
+.planner .hint { color: var(--muted); font-size: 14px; margin: 0 0 12px; }
+.field { margin: 12px 0; }
+.field .label { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: inherit; font-size: 14px; padding: 4px 11px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; font-variant-numeric: tabular-nums; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+:root[data-theme="dark"] .chip[aria-pressed="true"] { color: #0f131a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .chip[aria-pressed="true"] { color: #0f131a; } }
+.chip:disabled { opacity: .35; cursor: not-allowed; }
+.answer { margin-top: 14px; padding: 14px; border-radius: 8px; background: var(--accent-soft); }
+.answer .big { font-size: 30px; font-weight: 750; font-variant-numeric: tabular-nums; }
+.answer p { margin: 2px 0; font-size: 14px; }
+.tag { display: inline-block; font-size: 12px; font-weight: 600; color: var(--muted); border: 1px solid var(--border); border-radius: 6px; padding: 1px 7px; margin-left: 6px; vertical-align: 2px; }
+.frame { width: 100%; height: 980px; border: 1px solid var(--border); border-radius: 12px; background: #f8f9fb; }
+.links { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+.links a { display: block; text-decoration: none; color: var(--text); }
+.links a .t { font-weight: 650; color: var(--accent); }
+.links a .d { font-size: 14px; color: var(--muted); }
+footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--border); color: var(--muted); font-size: 14px; }
+@media (max-width: 760px) {
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .two, .planner, .links { grid-template-columns: minmax(0, 1fr); }
+  .slice { grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; }
+  .slice.head { display: none; }
+  .slice .before { grid-column: 1; color: var(--muted); font-size: 14px; }
+  .slice .num { grid-row: 1; grid-column: 2; }
+  .slice .bar { grid-column: 1 / -1; }
+  .slice .num.p { grid-row: auto; grid-column: 1 / -1; text-align: left; font-size: 13px; color: var(--muted); }
+  .frame { height: 1200px; }
+}
+</style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <div class="eyebrow">EvalSignal</div>
+    <h1>Is an AI change a real improvement, or just noise?</h1>
+    <p class="lead">You changed a prompt or a model, reran your test cases, and the score moved.
+      EvalSignal compares the two runs case by case and tells you whether the change is real,
+      how sure you can be, and how many test cases you would need if you cannot tell yet.</p>
+    <div class="actions">
+      <a class="button primary" data-link="repo" href="#">Source code</a>
+      <a class="button" data-link="results" href="#">Methodology and results</a>
+      <a class="button" href="#try">Try it locally</a>
+    </div>
+    <div class="notice" id="notice"></div>
+  </header>
+
+  <section id="compare">
+    <div class="step">1 · Compare two versions</div>
+    <h2>A score moved. Is it real?</h2>
+    <p class="intro">Each example has a "before" and an "after" run of the same test cases. The bar
+      shows the measured change (dot) and the range the true change most likely lies in (line).
+      If the range crosses zero, the data cannot rule out "no change".</p>
+    <div class="tabs" role="tablist" id="compare-tabs"></div>
+    <div class="card" id="compare-card"></div>
+  </section>
+
+  <section id="hidden">
+    <div class="step">2 · Find hidden regressions</div>
+    <h2>The average is flat. One topic broke.</h2>
+    <p class="intro">An overall score can stay the same while one category collapses. EvalSignal
+      checks every category, and adjusts for checking several at once (Holm correction), so a
+      category is only flagged when the drop is unlikely to be chance.</p>
+    <div class="card" id="hidden-card"></div>
+  </section>
+
+  <section id="uncertainty">
+    <div class="step">3 · Explain uncertainty</div>
+    <h2>"No meaningful change" is not "not enough evidence"</h2>
+    <p class="intro">Both mean "do not panic", but they mean different things. One is evidence that
+      nothing important changed; the other says the test set is too small to know.</p>
+    <div class="two" id="contrast"></div>
+    <div class="planner" id="planner"></div>
+  </section>
+
+  <section id="report">
+    <div class="step">4 · The actual report</div>
+    <h2>What the tool produces</h2>
+    <p class="intro">This is the unedited HTML report EvalSignal wrote for the support-assistant
+      example: a single file with no scripts, safe to attach to a ticket or a pull request.</p>
+    <iframe class="frame" src="report.html" title="EvalSignal HTML report for the support-assistant example" loading="lazy"></iframe>
+    <p><a href="report.html" target="_blank" rel="noopener">Open the report on its own page</a></p>
+  </section>
+
+  <section id="try">
+    <div class="step">Try it</div>
+    <h2>Run it on your own results</h2>
+    <p class="intro">Any evaluation tool that can write one row per test case works: an id, and
+      pass/fail or a score. Optional columns add categories and groups of related cases.</p>
+    <pre id="quickstart"></pre>
+    <div class="links">
+      <a class="card" data-link="repo" href="#"><div class="t">Source code</div><div class="d">The statistics, CLI and tests.</div></a>
+      <a class="card" data-link="results" href="#"><div class="t">Methodology</div><div class="d">Simulation checks and two case studies on public data.</div></a>
+      <a class="card" data-link="readme" href="#"><div class="t">All commands</div><div class="d">compare, plan, judge, and the CI example.</div></a>
+    </div>
+  </section>
+
+  <footer id="footer"></footer>
+</main>
+
+<script id="data" type="application/json">__DATA__</script>
+<script>
+(function () {
+  "use strict";
+  var DATA = JSON.parse(document.getElementById("data").textContent);
+  var LINKS = {
+    repo: DATA.repo,
+    results: DATA.repo + "/blob/main/docs/results.md",
+    readme: DATA.repo + "#use"
+  };
+
+  // Build elements without innerHTML: every value is set as text.
+  function el(tag, attrs, children) {
+    var node = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (key) {
+      if (key === "text") node.textContent = attrs[key];
+      else if (key === "class") node.className = attrs[key];
+      else if (key === "style") node.style.cssText = attrs[key];
+      else node.setAttribute(key, attrs[key]);
+    });
+    (children || []).forEach(function (child) { if (child) node.appendChild(child); });
+    return node;
+  }
+  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+
+  function value(s, x) { return s.binary ? (x * 100).toFixed(1) + "%" : x.toFixed(2); }
+  function delta(binary, x) {
+    var sign = x > 0 ? "+" : x < 0 ? "−" : "±";
+    return binary ? sign + Math.abs(x * 100).toFixed(1) + " pts" : sign + Math.abs(x).toFixed(3);
+  }
+  function pval(p) { return p < 0.001 ? "< 0.001" : p.toFixed(3); }
+  function count(n) { return n.toLocaleString("en-US"); }
+
+  document.querySelectorAll("[data-link]").forEach(function (a) {
+    a.href = LINKS[a.getAttribute("data-link")];
+  });
+
+  document.getElementById("notice").appendChild(el("span", {}, [
+    el("strong", { text: "Everything here is precomputed. " }),
+    document.createTextNode("Each result was produced by the EvalSignal command-line tool (version "
+      + DATA.version + ", built " + DATA.built + ") on made-up example data, and is shown with the "
+      + "command that reproduces it. Nothing is calculated in your browser.")
+  ]));
+
+  // A change and its range on a scale centred on zero, with the margin band when set.
+  function interval(binary, diff, ci, margin, reach, label) {
+    function pos(x) { return 50 + 50 * Math.max(-1, Math.min(1, x / reach)); }
+    var bar = el("div", { class: "bar" });
+    if (margin !== null && margin !== undefined) {
+      bar.appendChild(el("div", { class: "band", style: "left:" + pos(-margin) + "%;width:" + (pos(margin) - pos(-margin)) + "%" }));
+    }
+    bar.appendChild(el("div", { class: "zero" }));
+    bar.appendChild(el("div", { class: "ci", style: "left:" + pos(ci[0]) + "%;width:" + Math.max(pos(ci[1]) - pos(ci[0]), 0.6) + "%" }));
+    bar.appendChild(el("div", { class: "dot", style: "left:" + pos(diff) + "%" }));
+    var parts = [];
+    if (label) parts.push(el("div", { class: "label", text: label }));
+    parts.push(bar);
+    parts.push(el("div", { class: "scale" }, [
+      el("span", { text: delta(binary, -reach) }), el("span", { text: "0" }), el("span", { text: delta(binary, reach) })
+    ]));
+    return el("div", { class: "chart" }, parts);
+  }
+  function reachOf(s) {
+    var xs = [Math.abs(s.ci[0]), Math.abs(s.ci[1]), Math.abs(s.difference)];
+    if (s.margin !== null) xs.push(s.margin);
+    return Math.max.apply(null, xs) * 1.25 || 1;
+  }
+  function legend(s) {
+    var items = [
+      el("span", {}, [el("i", { style: "background:var(--c)" }), document.createTextNode("measured change and 95% range")])
+    ];
+    if (s.margin !== null) {
+      items.push(el("span", {}, [el("i", { style: "background:var(--margin-band)" }),
+        document.createTextNode("margin: changes smaller than " + delta(s.binary, s.margin).slice(1) + " do not matter")]));
+    }
+    return el("div", { class: "legend" }, items);
+  }
+  function verdictBox(s, outcomeClass) {
+    return el("div", { class: "verdict " + outcomeClass }, [
+      el("span", { class: "badge", text: s.label }),
+      el("div", { class: "headline", text: s.headline })
+    ].concat(s.details.map(function (d) { return el("p", { text: d }); })));
+  }
+  function command(text) {
+    return el("div", { class: "command" }, [
+      el("div", { class: "label", text: "Reproduce:" }), el("pre", { text: text })
+    ]);
+  }
+  function stat(k, v) { return el("div", { class: "stat" }, [el("div", { class: "k", text: k }), el("div", { class: "v", text: v })]); }
+
+  var byKey = {};
+  DATA.scenarios.forEach(function (s) { byKey[s.key] = s; });
+
+  // 1. Compare
+  var compareKeys = ["upgrade", "small_eval", "ratings"];
+  var tabs = document.getElementById("compare-tabs");
+  var card = document.getElementById("compare-card");
+  function showScenario(key) {
+    var s = byKey[key];
+    tabs.querySelectorAll(".tab").forEach(function (t) { t.setAttribute("aria-selected", String(t.dataset.key === key)); });
+    clear(card);
+    card.className = "card o-" + s.outcome;
+    card.appendChild(el("p", { class: "story", text: s.story }));
+    card.appendChild(el("div", { class: "stats" }, [
+      stat("Before", value(s, s.baseline)), stat("After", value(s, s.candidate)),
+      stat("Change", delta(s.binary, s.difference)), stat("Test cases", count(s.n))
+    ]));
+    card.appendChild(interval(s.binary, s.difference, s.ci, s.margin, reachOf(s), null));
+    card.appendChild(legend(s));
+    if (s.flipped_down !== null) {
+      card.appendChild(el("p", { class: "story", style: "margin:10px 0 0;font-size:14px",
+        text: "Only cases that changed result carry information: " + count(s.flipped_up) + " went from fail to pass, "
+          + count(s.flipped_down) + " from pass to fail. The other " + count(s.n - s.flipped_up - s.flipped_down) + " stayed the same." }));
+    }
+    card.appendChild(verdictBox(s, "o-" + s.outcome));
+    card.appendChild(command(s.command));
+  }
+  compareKeys.forEach(function (key) {
+    var b = el("button", { class: "tab", role: "tab", type: "button", text: byKey[key].title });
+    b.dataset.key = key;
+    b.addEventListener("click", function () { showScenario(key); });
+    tabs.appendChild(b);
+  });
+  showScenario("small_eval");
+
+  // 2. Hidden regressions
+  (function () {
+    var s = byKey.support_bot;
+    var box = document.getElementById("hidden-card");
+    box.appendChild(el("p", { class: "story", text: s.story }));
+    var flagged = s.slices.filter(function (x) { return x.regression; });
+    box.appendChild(el("p", { class: "overall-line" }, [
+      el("strong", { text: "Overall: " }),
+      document.createTextNode(value(s, s.baseline) + " → " + value(s, s.candidate) + " (" + delta(true, s.difference) + "), p = " + pval(s.p) + ". "),
+      flagged.length ? el("span", { class: "pill", text: "Regression in " + flagged.map(function (x) { return x.name; }).join(", ") }) : null
+    ]));
+    var reach = Math.max.apply(null, s.slices.map(function (x) { return Math.max(Math.abs(x.ci[0]), Math.abs(x.ci[1])); })) * 1.15;
+    var rows = [el("div", { class: "slice head" }, [
+      el("div", { text: "Topic" }), el("div", { text: "Before → after" }), el("div", { class: "num", text: "Change" }),
+      el("div", { text: "Change and 95% range (" + delta(true, -reach) + " to " + delta(true, reach) + ")" }), el("div", { class: "num", text: "p (Holm)" })
+    ])];
+    s.slices.forEach(function (x) {
+      function pos(v) { return 50 + 50 * Math.max(-1, Math.min(1, v / reach)); }
+      var bar = el("div", { class: "bar" }, [
+        el("div", { class: "zero" }),
+        el("div", { class: "ci", style: "left:" + pos(x.ci[0]) + "%;width:" + (pos(x.ci[1]) - pos(x.ci[0])) + "%" }),
+        el("div", { class: "dot", style: "left:" + pos(x.difference) + "%" })
+      ]);
+      rows.push(el("div", { class: "slice" + (x.regression ? " flag" : "") }, [
+        el("div", { class: "name", text: x.name }),
+        el("div", { class: "before", text: value(s, x.baseline) + " → " + value(s, x.candidate) }),
+        el("div", { class: "num", text: delta(true, x.difference) }),
+        bar,
+        el("div", { class: "num p", text: "p " + pval(x.p_holm) + (x.regression ? " · flagged" : "") })
+      ]));
+    });
+    box.appendChild(el("div", { class: "slices" }, rows));
+    box.appendChild(el("p", { class: "story", style: "margin:14px 0 0;font-size:14px",
+      text: "Billing and account also moved by 4 to 5 points, but their ranges cross zero: with 100 cases each and four topics checked, that is within chance. With --fail-on-regression, a flagged topic fails the CI check even though the overall score did not move." }));
+    box.appendChild(command(s.command + " --fail-on-regression"));
+  })();
+
+  // 3a. No meaningful change vs not enough evidence
+  (function () {
+    var holder = document.getElementById("contrast");
+    [["ratings", "No meaningful change", "The whole range sits inside the margin the team chose (±0.25 on a 1–5 scale). That is positive evidence that quality did not drop by an amount that matters. Safe to ship the cheaper model."],
+     ["small_eval", "Not enough evidence", "The range is wide and crosses zero. The +10 points come from only four cases flipping. This is not evidence of no change: it means 40 cases cannot tell. Collect more cases before deciding."]
+    ].forEach(function (row) {
+      var s = byKey[row[0]];
+      holder.appendChild(el("div", { class: "card o-" + s.outcome }, [
+        el("span", { class: "verdict", style: "display:inline-block;padding:0;border:0;background:none" }, [el("span", { class: "badge", text: s.label })]),
+        el("h3", { text: row[1] }),
+        interval(s.binary, s.difference, s.ci, s.margin, reachOf(s), s.title + ": " + delta(s.binary, s.difference) + " on " + count(s.n) + " cases"),
+        legend(s),
+        el("p", { text: row[2] })
+      ]));
+    });
+  })();
+
+  // 3b. Planner: lookups into tables computed by `evalsignal plan`
+  (function () {
+    var P = DATA.plan;
+    var holder = document.getElementById("planner");
+    function chipGroup(label, values, format, selected, onPick, isDisabled) {
+      var chips = el("div", { class: "chips" });
+      values.forEach(function (v) {
+        var c = el("button", { class: "chip", type: "button", text: format(v), "aria-pressed": String(v === selected) });
+        c.dataset.v = v;
+        c.addEventListener("click", function () { onPick(v); });
+        chips.appendChild(c);
+      });
+      return { node: el("div", { class: "field" }, [el("div", { class: "label", text: label }), chips]), chips: chips };
+    }
+    function press(group, v, isDisabled) {
+      group.chips.querySelectorAll(".chip").forEach(function (c) {
+        var cv = Number(c.dataset.v);
+        c.setAttribute("aria-pressed", String(cv === v));
+        c.disabled = isDisabled ? isDisabled(cv) : false;
+      });
+    }
+
+    // How many cases do I need?
+    var need = { d: 15, change: 3 };
+    var needAnswer = el("div", { class: "answer" });
+    var nd = chipGroup("Cases whose result differs between versions", P.disagree, function (v) { return v + "%"; }, need.d, function (v) { need.d = v; if (need.change >= v) need.change = P.change.filter(function (c) { return c < v; }).pop(); renderNeed(); });
+    var nc = chipGroup("Change you want to detect", P.change, function (v) { return v + " pts"; }, need.change, function (v) { need.change = v; renderNeed(); });
+    function renderNeed() {
+      press(nd, need.d); press(nc, need.change, function (c) { return c >= need.d; });
+      var n = P.needed[need.d + ":" + need.change];
+      clear(needAnswer);
+      needAnswer.appendChild(el("div", { class: "big", text: count(n) + " cases" }));
+      needAnswer.appendChild(el("p", { text: "to detect a " + need.change + "-point change 80% of the time, when about " + need.d + "% of cases change result." }));
+      needCmd.querySelector("pre").textContent = "evalsignal plan --disagree " + need.d + " --change " + need.change;
+    }
+    var needCmd = command("");
+
+    // What can my test set detect?
+    var det = { d: 15, items: 200 };
+    var detAnswer = el("div", { class: "answer" });
+    var dd = chipGroup("Cases whose result differs between versions", P.disagree, function (v) { return v + "%"; }, det.d, function (v) { det.d = v; renderDet(); });
+    var di = chipGroup("Test cases you have", P.items, function (v) { return count(v); }, det.items, function (v) { det.items = v; renderDet(); });
+    function renderDet() {
+      press(dd, det.d); press(di, det.items);
+      var m = P.detectable[det.d + ":" + det.items];
+      clear(detAnswer);
+      if (m === null) {
+        detAnswer.appendChild(el("div", { class: "big", text: "Too few" }));
+        detAnswer.appendChild(el("p", { text: count(det.items) + " cases cannot reliably detect any change when only " + det.d + "% of cases change result." }));
+      } else {
+        detAnswer.appendChild(el("div", { class: "big", text: (m * 100).toFixed(1) + " pts" }));
+        detAnswer.appendChild(el("p", { text: "is the smallest change " + count(det.items) + " cases detect 80% of the time. Anything smaller can easily be missed." }));
+      }
+      detCmd.querySelector("pre").textContent = "evalsignal plan --disagree " + det.d + " --items " + det.items;
+    }
+    var detCmd = command("");
+
+    var note = "Looked up from a table computed by evalsignal plan (exact McNemar power, 5% significance, 80% power).";
+    holder.appendChild(el("div", { class: "card" }, [
+      el("h3", {}, [document.createTextNode("How many test cases do I need?"), el("span", { class: "tag", text: "precomputed" })]),
+      el("p", { class: "hint", text: note }), nd.node, nc.node, needAnswer, needCmd
+    ]));
+    holder.appendChild(el("div", { class: "card" }, [
+      el("h3", {}, [document.createTextNode("What can my test set detect?"), el("span", { class: "tag", text: "precomputed" })]),
+      el("p", { class: "hint", text: note }), dd.node, di.node, detAnswer, detCmd
+    ]));
+    renderNeed(); renderDet();
+  })();
+
+  // Quick start and footer
+  document.getElementById("quickstart").textContent = [
+    "git clone " + DATA.repo + " && cd evalsignal",
+    "uv sync",
+    "uv run evalsignal compare examples/support_bot/before.csv examples/support_bot/after.csv --html report.html",
+    "",
+    "# your own results: one row per test case",
+    "# id,passed,slice",
+    "# refund-001,true,refunds"
+  ].join("\n");
+  document.getElementById("footer").appendChild(el("p", {}, [
+    document.createTextNode("All examples use made-up data generated by examples/make_examples.py. This page is built by site/build.py from the tool's own output. "),
+    el("a", { href: DATA.repo, text: "Source on GitHub" })
+  ]));
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,560 @@
+{
+  "leaderboard": {
+    "tasks": 58,
+    "totals": {
+      "arc:challenge_questions": 1170,
+      "arc:challenge_unmatched": 0,
+      "mmlu_questions": 14015,
+      "mmlu_unmatched": 0
+    },
+    "mmlu_subject_sizes": {
+      "min": 91,
+      "median": 173,
+      "max": 1534
+    },
+    "per_task": {
+      "arc:challenge": {
+        "questions": 1170,
+        "unmatched": 0,
+        "base_accuracy": 0.5684,
+        "instruct_accuracy": 0.5231,
+        "both_correct": 550,
+        "only_base_correct": 115,
+        "only_instruct_correct": 62
+      },
+      "hendrycksTest-abstract_algebra": {
+        "questions": 100,
+        "unmatched": 0,
+        "base_accuracy": 0.29,
+        "instruct_accuracy": 0.34,
+        "both_correct": 17,
+        "only_base_correct": 12,
+        "only_instruct_correct": 17
+      },
+      "hendrycksTest-anatomy": {
+        "questions": 135,
+        "unmatched": 0,
+        "base_accuracy": 0.6296,
+        "instruct_accuracy": 0.4222,
+        "both_correct": 50,
+        "only_base_correct": 35,
+        "only_instruct_correct": 7
+      },
+      "hendrycksTest-astronomy": {
+        "questions": 152,
+        "unmatched": 0,
+        "base_accuracy": 0.6579,
+        "instruct_accuracy": 0.5658,
+        "both_correct": 72,
+        "only_base_correct": 28,
+        "only_instruct_correct": 14
+      },
+      "hendrycksTest-business_ethics": {
+        "questions": 100,
+        "unmatched": 0,
+        "base_accuracy": 0.57,
+        "instruct_accuracy": 0.52,
+        "both_correct": 44,
+        "only_base_correct": 13,
+        "only_instruct_correct": 8
+      },
+      "hendrycksTest-clinical_knowledge": {
+        "questions": 265,
+        "unmatched": 0,
+        "base_accuracy": 0.6943,
+        "instruct_accuracy": 0.5849,
+        "both_correct": 136,
+        "only_base_correct": 48,
+        "only_instruct_correct": 19
+      },
+      "hendrycksTest-college_biology": {
+        "questions": 144,
+        "unmatched": 0,
+        "base_accuracy": 0.7292,
+        "instruct_accuracy": 0.5903,
+        "both_correct": 71,
+        "only_base_correct": 34,
+        "only_instruct_correct": 14
+      },
+      "hendrycksTest-college_chemistry": {
+        "questions": 100,
+        "unmatched": 0,
+        "base_accuracy": 0.52,
+        "instruct_accuracy": 0.37,
+        "both_correct": 32,
+        "only_base_correct": 20,
+        "only_instruct_correct": 5
+      },
+      "hendrycksTest-college_computer_science": {
+        "questions": 100,
+        "unmatched": 0,
+        "base_accuracy": 0.52,
+        "instruct_accuracy": 0.53,
+        "both_correct": 38,
+        "only_base_correct": 14,
+        "only_instruct_correct": 15
+      },
+      "hendrycksTest-college_mathematics": {
+        "questions": 100,
+        "unmatched": 0,
+        "base_accuracy": 0.4,
+        "instruct_accuracy": 0.36,
+        "both_correct": 24,
+        "only_base_correct": 16,
+        "only_instruct_correct": 12
+      },
+      "hendrycksTest-college_medicine": {
+        "questions": 173,
+        "unmatched": 0,
+        "base_accuracy": 0.6647,
+        "instruct_accuracy": 0.5202,
+        "both_correct": 83,
+        "only_base_correct": 32,
+        "only_instruct_correct": 7
+      },
+      "hendrycksTest-college_physics": {
+        "questions": 91,
+        "unmatched": 0,
+        "base_accuracy": 0.3736,
+        "instruct_accuracy": 0.2967,
+        "both_correct": 15,
+        "only_base_correct": 19,
+        "only_instruct_correct": 12
+      },
+      "hendrycksTest-computer_security": {
+        "questions": 100,
+        "unmatched": 0,
+        "base_accuracy": 0.77,
+        "instruct_accuracy": 0.67,
+        "both_correct": 60,
+        "only_base_correct": 17,
+        "only_instruct_correct": 7
+      },
+      "hendrycksTest-conceptual_physics": {
+        "questions": 235,
+        "unmatched": 0,
+        "base_accuracy": 0.5745,
+        "instruct_accuracy": 0.4809,
+        "both_correct": 93,
+        "only_base_correct": 42,
+        "only_instruct_correct": 20
+      },
+      "hendrycksTest-econometrics": {
+        "questions": 114,
+        "unmatched": 0,
+        "base_accuracy": 0.5,
+        "instruct_accuracy": 0.3772,
+        "both_correct": 38,
+        "only_base_correct": 19,
+        "only_instruct_correct": 5
+      },
+      "hendrycksTest-electrical_engineering": {
+        "questions": 145,
+        "unmatched": 0,
+        "base_accuracy": 0.5724,
+        "instruct_accuracy": 0.5517,
+        "both_correct": 64,
+        "only_base_correct": 19,
+        "only_instruct_correct": 16
+      },
+      "hendrycksTest-elementary_mathematics": {
+        "questions": 377,
+        "unmatched": 0,
+        "base_accuracy": 0.374,
+        "instruct_accuracy": 0.366,
+        "both_correct": 81,
+        "only_base_correct": 60,
+        "only_instruct_correct": 57
+      },
+      "hendrycksTest-formal_logic": {
+        "questions": 126,
+        "unmatched": 0,
+        "base_accuracy": 0.4127,
+        "instruct_accuracy": 0.381,
+        "both_correct": 36,
+        "only_base_correct": 16,
+        "only_instruct_correct": 12
+      },
+      "hendrycksTest-global_facts": {
+        "questions": 100,
+        "unmatched": 0,
+        "base_accuracy": 0.37,
+        "instruct_accuracy": 0.33,
+        "both_correct": 14,
+        "only_base_correct": 23,
+        "only_instruct_correct": 19
+      },
+      "hendrycksTest-high_school_biology": {
+        "questions": 310,
+        "unmatched": 0,
+        "base_accuracy": 0.771,
+        "instruct_accuracy": 0.6419,
+        "both_correct": 183,
+        "only_base_correct": 56,
+        "only_instruct_correct": 16
+      },
+      "hendrycksTest-high_school_chemistry": {
+        "questions": 203,
+        "unmatched": 0,
+        "base_accuracy": 0.5271,
+        "instruct_accuracy": 0.4138,
+        "both_correct": 70,
+        "only_base_correct": 37,
+        "only_instruct_correct": 14
+      },
+      "hendrycksTest-high_school_computer_science": {
+        "questions": 100,
+        "unmatched": 0,
+        "base_accuracy": 0.68,
+        "instruct_accuracy": 0.52,
+        "both_correct": 48,
+        "only_base_correct": 20,
+        "only_instruct_correct": 4
+      },
+      "hendrycksTest-high_school_european_history": {
+        "questions": 165,
+        "unmatched": 0,
+        "base_accuracy": 0.7818,
+        "instruct_accuracy": 0.6667,
+        "both_correct": 106,
+        "only_base_correct": 23,
+        "only_instruct_correct": 4
+      },
+      "hendrycksTest-high_school_geography": {
+        "questions": 198,
+        "unmatched": 0,
+        "base_accuracy": 0.7727,
+        "instruct_accuracy": 0.7222,
+        "both_correct": 128,
+        "only_base_correct": 25,
+        "only_instruct_correct": 15
+      },
+      "hendrycksTest-high_school_government_and_politics": {
+        "questions": 193,
+        "unmatched": 0,
+        "base_accuracy": 0.8653,
+        "instruct_accuracy": 0.7254,
+        "both_correct": 137,
+        "only_base_correct": 30,
+        "only_instruct_correct": 3
+      },
+      "hendrycksTest-high_school_macroeconomics": {
+        "questions": 390,
+        "unmatched": 0,
+        "base_accuracy": 0.6667,
+        "instruct_accuracy": 0.5205,
+        "both_correct": 181,
+        "only_base_correct": 79,
+        "only_instruct_correct": 22
+      },
+      "hendrycksTest-high_school_mathematics": {
+        "questions": 270,
+        "unmatched": 0,
+        "base_accuracy": 0.337,
+        "instruct_accuracy": 0.3,
+        "both_correct": 42,
+        "only_base_correct": 49,
+        "only_instruct_correct": 39
+      },
+      "hendrycksTest-high_school_microeconomics": {
+        "questions": 238,
+        "unmatched": 0,
+        "base_accuracy": 0.6597,
+        "instruct_accuracy": 0.5462,
+        "both_correct": 105,
+        "only_base_correct": 52,
+        "only_instruct_correct": 25
+      },
+      "hendrycksTest-high_school_physics": {
+        "questions": 151,
+        "unmatched": 0,
+        "base_accuracy": 0.3245,
+        "instruct_accuracy": 0.3245,
+        "both_correct": 29,
+        "only_base_correct": 20,
+        "only_instruct_correct": 20
+      },
+      "hendrycksTest-high_school_psychology": {
+        "questions": 534,
+        "unmatched": 0,
+        "base_accuracy": 0.824,
+        "instruct_accuracy": 0.7097,
+        "both_correct": 359,
+        "only_base_correct": 81,
+        "only_instruct_correct": 20
+      },
+      "hendrycksTest-high_school_statistics": {
+        "questions": 216,
+        "unmatched": 0,
+        "base_accuracy": 0.5741,
+        "instruct_accuracy": 0.4537,
+        "both_correct": 77,
+        "only_base_correct": 47,
+        "only_instruct_correct": 21
+      },
+      "hendrycksTest-high_school_us_history": {
+        "questions": 204,
+        "unmatched": 0,
+        "base_accuracy": 0.799,
+        "instruct_accuracy": 0.7059,
+        "both_correct": 138,
+        "only_base_correct": 25,
+        "only_instruct_correct": 6
+      },
+      "hendrycksTest-high_school_world_history": {
+        "questions": 237,
+        "unmatched": 0,
+        "base_accuracy": 0.7722,
+        "instruct_accuracy": 0.6962,
+        "both_correct": 153,
+        "only_base_correct": 30,
+        "only_instruct_correct": 12
+      },
+      "hendrycksTest-human_aging": {
+        "questions": 223,
+        "unmatched": 0,
+        "base_accuracy": 0.704,
+        "instruct_accuracy": 0.6547,
+        "both_correct": 134,
+        "only_base_correct": 23,
+        "only_instruct_correct": 12
+      },
+      "hendrycksTest-human_sexuality": {
+        "questions": 131,
+        "unmatched": 0,
+        "base_accuracy": 0.7939,
+        "instruct_accuracy": 0.6718,
+        "both_correct": 78,
+        "only_base_correct": 26,
+        "only_instruct_correct": 10
+      },
+      "hendrycksTest-international_law": {
+        "questions": 121,
+        "unmatched": 0,
+        "base_accuracy": 0.7769,
+        "instruct_accuracy": 0.6777,
+        "both_correct": 74,
+        "only_base_correct": 20,
+        "only_instruct_correct": 8
+      },
+      "hendrycksTest-jurisprudence": {
+        "questions": 108,
+        "unmatched": 0,
+        "base_accuracy": 0.7778,
+        "instruct_accuracy": 0.6944,
+        "both_correct": 72,
+        "only_base_correct": 12,
+        "only_instruct_correct": 3
+      },
+      "hendrycksTest-logical_fallacies": {
+        "questions": 163,
+        "unmatched": 0,
+        "base_accuracy": 0.7914,
+        "instruct_accuracy": 0.6503,
+        "both_correct": 99,
+        "only_base_correct": 30,
+        "only_instruct_correct": 7
+      },
+      "hendrycksTest-machine_learning": {
+        "questions": 112,
+        "unmatched": 0,
+        "base_accuracy": 0.4821,
+        "instruct_accuracy": 0.4732,
+        "both_correct": 43,
+        "only_base_correct": 11,
+        "only_instruct_correct": 10
+      },
+      "hendrycksTest-management": {
+        "questions": 103,
+        "unmatched": 0,
+        "base_accuracy": 0.8155,
+        "instruct_accuracy": 0.6893,
+        "both_correct": 68,
+        "only_base_correct": 16,
+        "only_instruct_correct": 3
+      },
+      "hendrycksTest-marketing": {
+        "questions": 234,
+        "unmatched": 0,
+        "base_accuracy": 0.8718,
+        "instruct_accuracy": 0.8419,
+        "both_correct": 182,
+        "only_base_correct": 22,
+        "only_instruct_correct": 15
+      },
+      "hendrycksTest-medical_genetics": {
+        "questions": 100,
+        "unmatched": 0,
+        "base_accuracy": 0.74,
+        "instruct_accuracy": 0.67,
+        "both_correct": 60,
+        "only_base_correct": 14,
+        "only_instruct_correct": 7
+      },
+      "hendrycksTest-miscellaneous": {
+        "questions": 783,
+        "unmatched": 0,
+        "base_accuracy": 0.8174,
+        "instruct_accuracy": 0.7433,
+        "both_correct": 554,
+        "only_base_correct": 86,
+        "only_instruct_correct": 28
+      },
+      "hendrycksTest-moral_disputes": {
+        "questions": 346,
+        "unmatched": 0,
+        "base_accuracy": 0.711,
+        "instruct_accuracy": 0.5896,
+        "both_correct": 186,
+        "only_base_correct": 60,
+        "only_instruct_correct": 18
+      },
+      "hendrycksTest-moral_scenarios": {
+        "questions": 895,
+        "unmatched": 0,
+        "base_accuracy": 0.3251,
+        "instruct_accuracy": 0.2447,
+        "both_correct": 149,
+        "only_base_correct": 142,
+        "only_instruct_correct": 70
+      },
+      "hendrycksTest-nutrition": {
+        "questions": 306,
+        "unmatched": 0,
+        "base_accuracy": 0.7582,
+        "instruct_accuracy": 0.6144,
+        "both_correct": 176,
+        "only_base_correct": 56,
+        "only_instruct_correct": 12
+      },
+      "hendrycksTest-philosophy": {
+        "questions": 311,
+        "unmatched": 0,
+        "base_accuracy": 0.6977,
+        "instruct_accuracy": 0.6077,
+        "both_correct": 164,
+        "only_base_correct": 53,
+        "only_instruct_correct": 25
+      },
+      "hendrycksTest-prehistory": {
+        "questions": 324,
+        "unmatched": 0,
+        "base_accuracy": 0.7346,
+        "instruct_accuracy": 0.5772,
+        "both_correct": 172,
+        "only_base_correct": 66,
+        "only_instruct_correct": 15
+      },
+      "hendrycksTest-professional_accounting": {
+        "questions": 282,
+        "unmatched": 0,
+        "base_accuracy": 0.4858,
+        "instruct_accuracy": 0.383,
+        "both_correct": 74,
+        "only_base_correct": 63,
+        "only_instruct_correct": 34
+      },
+      "hendrycksTest-professional_law": {
+        "questions": 1534,
+        "unmatched": 0,
+        "base_accuracy": 0.4478,
+        "instruct_accuracy": 0.4009,
+        "both_correct": 462,
+        "only_base_correct": 225,
+        "only_instruct_correct": 153
+      },
+      "hendrycksTest-professional_medicine": {
+        "questions": 272,
+        "unmatched": 0,
+        "base_accuracy": 0.6912,
+        "instruct_accuracy": 0.5809,
+        "both_correct": 132,
+        "only_base_correct": 56,
+        "only_instruct_correct": 26
+      },
+      "hendrycksTest-professional_psychology": {
+        "questions": 611,
+        "unmatched": 0,
+        "base_accuracy": 0.6809,
+        "instruct_accuracy": 0.5172,
+        "both_correct": 282,
+        "only_base_correct": 134,
+        "only_instruct_correct": 34
+      },
+      "hendrycksTest-public_relations": {
+        "questions": 108,
+        "unmatched": 0,
+        "base_accuracy": 0.6759,
+        "instruct_accuracy": 0.6574,
+        "both_correct": 60,
+        "only_base_correct": 13,
+        "only_instruct_correct": 11
+      },
+      "hendrycksTest-security_studies": {
+        "questions": 245,
+        "unmatched": 0,
+        "base_accuracy": 0.7265,
+        "instruct_accuracy": 0.6776,
+        "both_correct": 148,
+        "only_base_correct": 30,
+        "only_instruct_correct": 18
+      },
+      "hendrycksTest-sociology": {
+        "questions": 201,
+        "unmatched": 0,
+        "base_accuracy": 0.8308,
+        "instruct_accuracy": 0.7463,
+        "both_correct": 141,
+        "only_base_correct": 26,
+        "only_instruct_correct": 9
+      },
+      "hendrycksTest-us_foreign_policy": {
+        "questions": 99,
+        "unmatched": 0,
+        "base_accuracy": 0.8586,
+        "instruct_accuracy": 0.7879,
+        "both_correct": 73,
+        "only_base_correct": 12,
+        "only_instruct_correct": 5
+      },
+      "hendrycksTest-virology": {
+        "questions": 166,
+        "unmatched": 0,
+        "base_accuracy": 0.5542,
+        "instruct_accuracy": 0.4699,
+        "both_correct": 66,
+        "only_base_correct": 26,
+        "only_instruct_correct": 12
+      },
+      "hendrycksTest-world_religions": {
+        "questions": 171,
+        "unmatched": 0,
+        "base_accuracy": 0.8304,
+        "instruct_accuracy": 0.7251,
+        "both_correct": 118,
+        "only_base_correct": 24,
+        "only_instruct_correct": 6
+      }
+    }
+  },
+  "mt_bench": {
+    "human_judgments": 3355,
+    "human_judges": 65,
+    "gpt4_judgments": 2400,
+    "models_compared": 6,
+    "human_winner_share": {
+      "model_b": 1282,
+      "tie": 780,
+      "model_a": 1293
+    },
+    "gpt4_winner_share": {
+      "model_b": 1610,
+      "tie (inconsistent)": 380,
+      "model_a": 190,
+      "tie": 220
+    },
+    "pairs_judged_by_humans": 2396,
+    "pairs_judged_by_both": 1232,
+    "pairs_with_two_or_more_humans": 761
+  }
+}

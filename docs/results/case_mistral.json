@@ -1,0 +1,182 @@
+{
+  "models": [
+    "Mistral-7B-v0.1 (base)",
+    "Mistral-7B-Instruct-v0.1"
+  ],
+  "overall": [
+    {
+      "benchmark": "MMLU",
+      "questions": 14015,
+      "base_accuracy": 0.6263,
+      "instruct_accuracy": 0.5372,
+      "difference": -0.0891,
+      "ci95": [
+        -0.097,
+        -0.0812
+      ],
+      "p_value": 2.0659577934328708e-106,
+      "only_base_correct": 2287,
+      "only_instruct_correct": 1038,
+      "verdict": "regression",
+      "headline": "Real regression: -8.9 points (p < 0.001)."
+    },
+    {
+      "benchmark": "ARC-Challenge",
+      "questions": 1170,
+      "base_accuracy": 0.5684,
+      "instruct_accuracy": 0.5231,
+      "difference": -0.0453,
+      "ci95": [
+        -0.0674,
+        -0.0231
+      ],
+      "p_value": 8.295915395809688e-05,
+      "only_base_correct": 115,
+      "only_instruct_correct": 62,
+      "verdict": "regression",
+      "headline": "Real regression: -4.5 points (p < 0.001)."
+    }
+  ],
+  "mmlu_subjects": {
+    "subjects": 57,
+    "significant_unadjusted": 37,
+    "significant_holm": 18,
+    "significant_bh": 33,
+    "flagged_by_holm": [
+      [
+        "anatomy",
+        -0.2074,
+        0.00071
+      ],
+      [
+        "clinical_knowledge",
+        -0.1094,
+        0.02191
+      ],
+      [
+        "college_medicine",
+        -0.1445,
+        0.00323
+      ],
+      [
+        "high_school_biology",
+        -0.129,
+        0.00012
+      ],
+      [
+        "high_school_european_history",
+        -0.1152,
+        0.01336
+      ],
+      [
+        "high_school_government_and_politics",
+        -0.1399,
+        7e-05
+      ],
+      [
+        "high_school_macroeconomics",
+        -0.1462,
+        0.0
+      ],
+      [
+        "high_school_psychology",
+        -0.1142,
+        0.0
+      ],
+      [
+        "high_school_us_history",
+        -0.0931,
+        0.03599
+      ],
+      [
+        "logical_fallacies",
+        -0.1411,
+        0.0086
+      ],
+      [
+        "miscellaneous",
+        -0.0741,
+        0.0
+      ],
+      [
+        "moral_disputes",
+        -0.1214,
+        0.0001
+      ],
+      [
+        "moral_scenarios",
+        -0.0804,
+        4e-05
+      ],
+      [
+        "nutrition",
+        -0.1438,
+        0.0
+      ],
+      [
+        "prehistory",
+        -0.1574,
+        0.0
+      ],
+      [
+        "professional_law",
+        -0.0469,
+        0.01102
+      ],
+      [
+        "professional_medicine",
+        -0.1103,
+        0.04882
+      ],
+      [
+        "professional_psychology",
+        -0.1637,
+        0.0
+      ]
+    ],
+    "only_without_correction": [
+      "astronomy",
+      "international_law",
+      "jurisprudence",
+      "virology"
+    ]
+  },
+  "small_eval_sets_mmlu": [
+    {
+      "subset_size": 50,
+      "naive_points_the_wrong_way": 0.072,
+      "evalsignal_correct_call": 0.156,
+      "evalsignal_not_enough_evidence": 0.8435,
+      "evalsignal_wrong_call": 0.0005
+    },
+    {
+      "subset_size": 100,
+      "naive_points_the_wrong_way": 0.023,
+      "evalsignal_correct_call": 0.3735,
+      "evalsignal_not_enough_evidence": 0.6265,
+      "evalsignal_wrong_call": 0.0
+    },
+    {
+      "subset_size": 200,
+      "naive_points_the_wrong_way": 0.0035,
+      "evalsignal_correct_call": 0.72,
+      "evalsignal_not_enough_evidence": 0.28,
+      "evalsignal_wrong_call": 0.0
+    },
+    {
+      "subset_size": 500,
+      "naive_points_the_wrong_way": 0.0,
+      "evalsignal_correct_call": 0.986,
+      "evalsignal_not_enough_evidence": 0.014,
+      "evalsignal_wrong_call": 0.0
+    },
+    {
+      "subset_size": 1000,
+      "naive_points_the_wrong_way": 0.0,
+      "evalsignal_correct_call": 1.0,
+      "evalsignal_not_enough_evidence": 0.0,
+      "evalsignal_wrong_call": 0.0
+    }
+  ],
+  "draws_per_size": 2000
+}

@@ -1,0 +1,28 @@
+{
+  "dataset": "lmsys/mt_bench_human_judgments (CC-BY-4.0)",
+  "items": "MT-Bench question and turn, two models compared",
+  "gpt4_verdicts": 2400,
+  "gpt4_inconsistent_share": 0.1583,
+  "gpt4_vs_humans": {
+    "pairs": 3355,
+    "with_ties": 0.6616989567809239,
+    "with_ties_ci": [
+      0.6417490563899462,
+      0.6824633823726545
+    ],
+    "without_ties": 0.8562705495537811,
+    "decisive_pairs": 2129,
+    "kappa": 0.4827208657641
+  },
+  "human_vs_human": {
+    "pairs": 2368,
+    "with_ties": 0.6554054054054054,
+    "with_ties_ci": [
+      0.6257796257796258,
+      0.6836981039270821
+    ],
+    "without_ties": 0.8270967741935484,
+    "decisive_pairs": 1550,
+    "kappa": 0.47023344911339016
+  }
+}

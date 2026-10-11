@@ -1,0 +1,51 @@
+# Example workflow: compare a pull request's evaluation results with main's
+# and post the verdict as a PR comment. Copy to .github/workflows/ and replace
+# the "Run evaluation" steps with your own evaluation command, which must
+# write one row per test case (id plus passed or score).
+
+name: eval-check
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Install EvalSignal
+        run: uv tool install git+https://github.com/dcoding0308/evalsignal
+
+      - name: Run evaluation on main
+        run: |
+          git worktree add ../base origin/${{ github.base_ref }}
+          (cd ../base && ./run_eval.sh > "$RUNNER_TEMP/before.csv")
+
+      - name: Run evaluation on this pull request
+        run: ./run_eval.sh > "$RUNNER_TEMP/after.csv"
+
+      - name: Compare
+        id: compare
+        run: |
+          set +e
+          evalsignal compare "$RUNNER_TEMP/before.csv" "$RUNNER_TEMP/after.csv" \
+            --format markdown --fail-on-regression > "$RUNNER_TEMP/comment.md"
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Comment on the pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr comment ${{ github.event.pull_request.number }} --body-file "$RUNNER_TEMP/comment.md"
+
+      - name: Fail on a clear regression
+        if: steps.compare.outputs.status != '0'
+        run: exit 1
